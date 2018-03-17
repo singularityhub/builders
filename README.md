@@ -5,7 +5,7 @@ faithfully by the [Singularity Global Client](https://singularityhub.github.io/s
 so you can run your own remote builds on different clouds of your choosing. This
 code base is under development, so expect to see more soon. It works as follows:
 
- 1. This is the library of build configurations, organized in [_cloud](cloud) by environment, and operating system. 
+ 1. This is the library of build configurations, organized in [_cloud](_cloud) by environment, and operating system. 
  2. When you launch a builder with the `sregistry` client, you have different ways to select build configurations from here.
  3. When your build launches, it uses the configuration settings and entry point running script you have selected!
  4. The build is run, and the result uploaded to Storage, again per the builder bundle.

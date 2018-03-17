@@ -40,10 +40,10 @@ future: true
 defaults:
   -
     scope:
-      path: ""
+      path: "pages"
       type: "pages"
     values:
-      layout: "bundle"
+      layout: null
 
   -
     scope:
