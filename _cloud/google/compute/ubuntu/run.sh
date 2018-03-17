@@ -45,13 +45,13 @@ sudo apt-get -y install git \
 
 
 METADATA="http://metadata/computeMetadata/v1/instance/attributes"
-SINGULARITY_REPO=$(curl ${METADATA}/repo -H "Metadata-Flavor: Google")
-SINGULARITY_BRANCH=$(curl ${METADATA}/branch -H "Metadata-Flavor: Google")
-SINGULARITY_RUNSCRIPT=$(curl ${METADATA}/runscript -H "Metadata-Flavor: Google")
-SINGULARITY_COMMIT=$(curl ${METADATA}/commit -H "Metadata-Flavor: Google")
-BUILDER_STORAGE_BUCKET=$(curl ${METADATA}/bucket -H "Metadata-Flavor: Google")
-BUILDER_LOGFILE=$(curl ${METADATA}/commit -H "Metadata-Flavor: Google")
-BUILDER_KILLHOURS=$(curl ${METADATA}/killhours -H "Metadata-Flavor: Google")
+SINGULARITY_REPO=$(curl ${METADATA}/SINGULARITY_REPO -H "Metadata-Flavor: Google")
+SINGULARITY_BRANCH=$(curl ${METADATA}/SINGULARITY_BRANCH -H "Metadata-Flavor: Google")
+SINGULARITY_RUNSCRIPT=$(curl ${METADATA}/SINGULARITY_RUNSCRIPT -H "Metadata-Flavor: Google")
+SINGULARITY_COMMIT=$(curl ${METADATA}/SINGULARITY_COMMIT -H "Metadata-Flavor: Google")
+BUILDER_STORAGE_BUCKET=$(curl ${METADATA}/BUILDER_STORAGE_BUCKET -H "Metadata-Flavor: Google")
+BUILDER_LOGFILE=$(curl ${METADATA}/BUILDER_LOGFILE -H "Metadata-Flavor: Google")
+BUILDER_KILLHOURS=$(curl ${METADATA}/BUILDER_KILLHOURS -H "Metadata-Flavor: Google")
 SINGULARITY_FOLDER=$(basename $REPO)
 
 
