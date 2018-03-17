@@ -7,7 +7,7 @@ layout: null
     "self": "{{ site.domain }}{{ site.baseurl }}{{ page.url }}.json"
    },
 
-   "data" {
+   "data": {
        "id": "{{ page.url | replace:'.json','.md' | replace: '/cloud/', '' }}",
        "author": "{{ page.author }}",
        {% if page.tags %}"tags": [{% for tag in page.tags %}"{{ tag }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}

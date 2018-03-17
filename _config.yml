@@ -53,18 +53,6 @@ defaults:
       layout: "bundle"
 
 
-#  -
-#    scope:
-#      path: ""
-#      type: "pages"
-
-#    scope:
-#      path: "pages"
-#      type: "pages"
-#    values:
-#      layout: "base"
-
-
 ### CONTACT SETTINGS ###
 
 # Social networks usernames. Many more available: google-plus, flickr, linkedin, etc). Shown in footer.
