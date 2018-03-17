@@ -7,14 +7,15 @@ title: Configs
 {
 
   "links": {
-    "self": "{{ site.url }}{{ page.url }}"
+    "self": "{{ site.domain }}{{ page.url }}"
   },
 
   "data": [
 
         {% for cloud in site.cloud %}
             {
-                "id": "{{ site.domain }}{{ cloud.url }}",
+                "id": "{{ site.domain }}{{ cloud.url }}.json",
+                "name": "{{ cloud.url }}.json",
                 {% if cloud.tags %}"tags": [{% for tag in cloud.tags %}"{{ tag }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
                 "author": "{{ cloud.author }}"
             }{% if forloop.last %}{% else %},{% endif %}

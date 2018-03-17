@@ -32,7 +32,7 @@ colors:  #in hex code if not noted else
 collections:
   cloud:
     output: true
-    permalink: /cloud/:path/
+    permalink: /cloud/:path
 
 repo: "https://www.github.com/singularityhub/builders"
 future: true
