@@ -16,6 +16,6 @@ layout: null
        {% if page.optional %}"optional": [{% for var in page.optional %}
           "{{ var }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}      
        "config": {{ content }}
-   },
+   }
 
 }
