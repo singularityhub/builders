@@ -10,6 +10,7 @@ code base is under development, so expect to see more soon. It works as follows:
  3. When your build launches, it uses the configuration settings and entry point running script you have selected!
  4. The build is run, and the result uploaded to Storage, again per the builder bundle.
 
+For the start of developer's documentation, [see here](https://singularityhub.github.io/builders/docs).
 
 ## General Overview
 

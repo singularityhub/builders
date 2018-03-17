@@ -3,7 +3,6 @@ permalink: docs
 title: Docs
 ---
 
-# Singularity Builder Developer Documentation
 This is a brief set of documentation to help the developer contribute a new
 or update Singularity Builder. 
 
