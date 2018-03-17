@@ -5,7 +5,7 @@ faithfully by the [Singularity Global Client](https://singularityhub.github.io/s
 so you can run your own remote builds on different clouds of your choosing. This
 code base is under development, so expect to see more soon. It works as follows:
 
- 1. This is the library of build configurations, organized in [_cloud](_cloud) by environment, and operating system. 
+ 1. This is the library of build configurations, organized in [_cloud](https://github.com/singularityhub/builders/tree/master/_cloud/) by environment, and operating system. 
  2. When you launch a builder with the `sregistry` client, you have different ways to select build configurations from here.
  3. When your build launches, it uses the configuration settings and entry point running script you have selected!
  4. The build is run, and the result uploaded to Storage, again per the builder bundle.
@@ -33,7 +33,7 @@ Compute.
 │           └── run.sh
 ```
 
-The configuration file [securebuild-2.4.3.json](_cloud/google/compute/ubuntu/securebuild-2.4.3.json) itself has a header with variables, and both are served programatically:
+The configuration file [securebuild-2.4.3.json](https://github.com/singularityhub/builders/blob/master/_cloud/google/compute/ubuntu/securebuild-2.4.3.json) itself has a header with variables, and both are served programatically:
 
  - [the builder library](https://singularityhub.github.io/builders/configs.json) of configurations is a starting entrypoint for the `sregistry` tool to search, and return custom configurations.
  - Each [specific config file](https://singularityhub.github.io/builders/cloud/google/compute/ubuntu/securebuild-2.4.3.json) can then be discovered and used by the `sregistry` client.
@@ -99,8 +99,7 @@ and so the general user will not need to edit the file. We will be discussing th
 in detail.
 
 ## What is in each folder?
-In the base here you will notice a file, [configs.json](configs.json). This renders into a
-[static API](https://singularityhub.github.io/builders/configs.json) that serves the 
+A configs.json template renders into a [static API](https://singularityhub.github.io/builders/configs.json) that serves the 
 config.json that is "default" for each builder bundle. This means that
 the client `sregistry` can query this static endpoint to always get a set of templates that are intended
 for each bundle.
