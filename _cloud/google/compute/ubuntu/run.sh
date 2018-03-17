@@ -51,7 +51,6 @@ SINGULARITY_RUNSCRIPT=$(curl ${METADATA}/SINGULARITY_RUNSCRIPT -H "Metadata-Flav
 SINGULARITY_COMMIT=$(curl ${METADATA}/SINGULARITY_COMMIT -H "Metadata-Flavor: Google")
 BUILDER_STORAGE_BUCKET=$(curl ${METADATA}/BUILDER_STORAGE_BUCKET -H "Metadata-Flavor: Google")
 BUILDER_LOGFILE=$(curl ${METADATA}/BUILDER_LOGFILE -H "Metadata-Flavor: Google")
-BUILDER_KILLHOURS=$(curl ${METADATA}/BUILDER_KILLHOURS -H "Metadata-Flavor: Google")
 SINGULARITY_FOLDER=$(basename $REPO)
 
 
@@ -85,7 +84,7 @@ echo "Using commit ${SINGULARITY_COMMIT}"
 # If we name hash, can rename file at end.
 
 echo "Start Time: $(date)." > ${SREGISTRY_LOGFILE} 2>&1
-timeout -s KILL ${BUILDER_KILLHOURS}h sudo singularity build container.simg "${SINGULARITY_RECIPE}" >> ${BUILDER_LOGFILE} 2>&1
+sudo singularity build container.simg "${SINGULARITY_RECIPE}" >> ${BUILDER_LOGFILE} 2>&1
 ret=$?
 
 echo "Return value of ${ret}." >> "${BUILDER_LOGFILE}" 2>&1
@@ -102,16 +101,3 @@ fi
 #TODO
 
 #image hash, size, etc.
-
-# https://cloud.google.com/compute/docs/access/create-enable-service-accounts-for-instances?hl=en_US
-# Instance will kill after finish. Permissions are needed for doing so on the server
-instanceName=$(hostname)
-
-# Extract zone and name from environment
-zoneMetadata=$(curl "http://metadata.google.internal/computeMetadata/v1/instance/zone" -H "Metadata-Flavor:Google")
-IFS=$'/'
-zoneMetadataSplit=($zoneMetadata)
-myZone="${zoneMetadataSplit[3]}"
-gcloud compute instances delete $instanceName --zone $myZone --quiet
-
-# Builder then kills self :)
