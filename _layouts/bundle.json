@@ -12,7 +12,7 @@ layout: null
        "author": "{{ page.author }}",
        {% if page.tags %}"tags": [{% for tag in page.tags %}"{{ tag }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
        {% if page.metadata %}"metadata": [{% for var in page.metadata %}
-          { "key": "{{ var.key }}", "value": "{{ var.value }}"}{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
+          { "{{ var.key }}": "{{ var.value }}"}{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
        {% if page.optional %}"optional": [{% for var in page.optional %}
           "{{ var }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}      
        "config": {{ content }}
