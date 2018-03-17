@@ -24,9 +24,10 @@ metadata:
    value: "/tmp/.shub-log"
  - key: BUILDER_KILLHOURS
    value: "10"
+ - key: SINGULARITY_RECIPE
  - key: SINGULARITY_COMMIT
- - key: "BUILDER_TAG"
- - key: "CONTACT"
+ - key: BUILDER_TAG
+ - key: CONTACT
 ---
 
         {
