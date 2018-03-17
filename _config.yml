@@ -40,9 +40,18 @@ future: true
 defaults:
   -
     scope:
-      path: "cloud"
+      path: ""
+      type: "pages"
     values:
-      layout: null
+      layout: "bundle"
+
+  -
+    scope:
+      path: "cloud"
+      type: "cloud"
+    values:
+      layout: "bundle"
+
 
 #  -
 #    scope:

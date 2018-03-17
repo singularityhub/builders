@@ -1,0 +1,24 @@
+---
+layout: configs
+permalink: configs.json
+title: Configs
+---
+
+{
+
+  "links": {
+    "self": "{{ site.url }}{{ page.url }}"
+  },
+
+  "data": [
+
+        {% for cloud in site.cloud %}
+            {
+                "id": "{{ site.domain }}{{ cloud.url }}",
+                {% if cloud.tags %}"tags": [{% for tag in cloud.tags %}"{{ tag }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
+                "author": "{{ cloud.author }}"
+            }{% if forloop.last %}{% else %},{% endif %}
+{% endfor %}
+]
+}
+
