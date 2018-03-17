@@ -24,10 +24,9 @@ metadata:
    value: "/tmp/.shub-log"
  - key: BUILDER_KILLHOURS
    value: "10"
-optional:
- - "SINGULARITY_COMMIT"
- - "BUILDER_TAG"
- - "CONTACT"
+ - key: SINGULARITY_COMMIT
+ - key: "BUILDER_TAG"
+ - key: "CONTACT"
 ---
 
         {
@@ -35,12 +34,9 @@ optional:
                 {
                     "autoDelete": true,
                     "boot": true,
-                    "initializeParams": {
-                        "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-8-jessie-v20180307"
-                    }
+                    "initializeParams": {}
                 }
             ],
-            "machineType": "zones/us-west1-a/machineTypes/n1-standard-1",
             "networkInterfaces": [
                 {
                     "accessConfigs": [
