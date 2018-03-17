@@ -5,40 +5,56 @@ faithfully by the [Singularity Global Client](https://singularityhub.github.io/s
 so you can run your own remote builds on different clouds of your choosing. This
 code base is under development, so expect to see more soon. It works as follows:
 
- 1. When you launch a builder with the client, this repository is the default base
- 2. The builder start script clones this repository with a builder bundle of choice. 
- 3. The build is run, and the result uploaded to Storage
+ 1. This is the library of build configurations, organized in [_cloud](cloud) by environment, and operating system. 
+ 2. When you launch a builder with the `sregistry` client, you have different ways to select build configurations from here.
+ 3. When your build launches, it uses the configuration settings and entry point running script you have selected!
+ 4. The build is run, and the result uploaded to Storage, again per the builder bundle.
 
 
 ## General Overview
 
 >> Wait, what is a builder bundle?
 
-Generally, it's a folder that has a particular build configuration. 
-Specifically, a **builder bundle** is a folder path in this repository that has 
-only three requirements - a `run.sh` script that should install Singularity, 
+Generally, a **builder bundle** is a folder that has a particular build configuration. 
+Specifically, it is a folder path in this repository that has 
+only two requirements - 1) a `run.sh` script that should install Singularity, 
 grab metadata for the build, run the build, and finish it up, 
-a configuration file that is provided for the user to customize and launch the
-build, and a yaml file to register any custom variables and defaults that are needed
-(TODO: this might be possible to capture in the config.json, but we need this
-arguably to render the static API and register custom config.json files). 
-The bundles are organized logically for the user based on build environment, operating systems, 
-and then any more detail that is necessary. The folder hierarchy can look however is logical, with no limit on
-organization, as any folder with a .yaml file will be found and registered. 
-For example, here is how we might organize the bundle for an ubuntu base on Google
+and 2) a configuration file that is provided for the user to customize and launch the
+build. This means that any file that ends in `json` that you find in the tree under
+[_cloud](_cloud) is a configuration that a user can select and customize to build a
+container. For example, here is how we might organize the bundle for an ubuntu base on Google
 Compute.
 
 ```
 ├── google
 │   └── compute
 │       └── ubuntu
-│           ├── ubuntu.yaml
-│           ├── config.json
+│           ├── securebuild-2.4.3.json
 │           └── run.sh
 ```
 
-More detail will be written about these files soon! For most users, they won't need
-to interact when them other than choosing a default for their platform.
+The configuration file [securebuild-2.4.3.json](_cloud/google/compute/ubuntu/securebuild-2.4.3.json) itself has a header with variables, and both are served programatically:
+
+ - [the builder library](https://singularityhub.github.io/builders/configs.json) of configurations is a starting entrypoint for the `sregistry` tool to search, and return custom configurations.
+ - Each [specific config file](https://singularityhub.github.io/builders/cloud/google/compute/ubuntu/securebuild-2.4.3.json) can then be discovered and used by the `sregistry` client.
+
+The client knows how to select reasonable defaults for builders, so for most users, they won't need to
+think about these builder bundles. For the more advanced user that wants to find tune his build, however,
+he will finally be able to do so!
+
+>> How are the builder bundles organized?
+
+The bundles are organized logically for the user based on build environment, operating systems, 
+and then any more detail that is necessary. For example, the bundle linked above is logically for an ubuntu
+host, and builds a "secure build" environment container with Singularity 2.4.3. 
+The folder hierarchy can look however is logical, with no limit on the number of different configurations that
+might even share some of the same running dependencies (files in the folder).
+
+>> How is a builder bundle registered?
+
+To appear in the API to be available for `sregistry`, the config file simply needs to be physically in the folder
+hierarchy. We will also be adding tests (checks) to run for the config files to ensure that formatting and other 
+details are OK.
 
 >> Why are the builder bundles separate from the Singularity Builder executable?
 
@@ -84,7 +100,8 @@ in detail.
 
 ## What is in each folder?
 In the base here you will notice a file, [configs.json](configs.json). This renders into a
-static API that serves the config.json that is "default" for each builder bundle. This means that
+[static API](https://singularityhub.github.io/builders/configs.json) that serves the 
+config.json that is "default" for each builder bundle. This means that
 the client `sregistry` can query this static endpoint to always get a set of templates that are intended
 for each bundle.
 
@@ -92,10 +109,7 @@ for each bundle.
 
 Each bundle (as of now in development) should have the following:
 
- - *.yaml: the yaml files register the different config.json files, and define custom variables. When the API renders the registered builders for the `sregistry` client, the client uses this information to ensure that the build is set up correctly.
- - config.json: One or more configuration files registered in the config.json for the user to choose from. 
+ - *.json: a configuration file (typically json) with front end (yaml) matter that is used to register the builder bundle with the API, and define custom variables. When the API renders the registered builders for the `sregistry` client, the client uses this information to ensure that the build is set up correctly. The user chooses from these configurations, and then can further customize them for his needs.
  - run.sh: The primary (default) runscript for the build. This is actually a variable, and doesn't necessarily need to be called run.sh, or even have the requirement of one script.
 
 **under development** and everything subject to change!  - @vsoch
-
-
