@@ -1,0 +1,26 @@
+---
+layout: null
+permalink: configs/
+title: Configs
+---
+
+{
+
+  "links": {
+    "self": "{{ site.url }}{{ page.url }}"
+  },
+
+  "data": [
+
+        {% for cloud in site.cloud %}
+            {
+                "id": "{{ cloud.url | replace:'.html','.md' | replace: '/cloud/', '' }}",
+                "author": "{{ app.author }}",
+                {% if app.tags %}"tags": [{% for tag in app.tags %}"{{ tag }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
+                {% if app.files %}"files": [{% for file in app.files %}"{{ site.url }}/apps{{ app.url }}{{ file }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
+                "links": {"self": "{{ site.url }}{{ app.url }}?json=1"}
+            }{% if forloop.last %}{% else %},{% endif %}
+{% endfor %}
+]
+}
+
