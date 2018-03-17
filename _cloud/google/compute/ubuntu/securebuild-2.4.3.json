@@ -8,21 +8,21 @@ tags:
  - ubuntu
  - singularity
 metadata:
- - key: "GOOGLE_COMPUTE_PROJECT"
+ - key: GOOGLE_COMPUTE_PROJECT
    value: "debian-project"
- - key: "SREGISTRY_BUILDER_machine_type"
+ - key: SREGISTRY_BUILDER_machine_type
    value: "n1-standard-1"
- - key: "GOOGLE_COMPUTE_IMAGE_FAMILY
+ - key: GOOGLE_COMPUTE_IMAGE_FAMILY
    value: "debian-8"
- - key: "SINGULARITY_BRANCH
+ - key: SINGULARITY_BRANCH
    value: "feature-squashbuild-secbuild-2.4.3"
- - key: "SINGULARITY_RUNSCRIPT
+ - key: SINGULARITY_RUNSCRIPT
    value: "run.sh"
- - key: "SINGULARITY_REPO
+ - key: SINGULARITY_REPO
    value: "https://github.com/cclerget/singularity.git"
- - key: "BUILDER_LOGFILE"
+ - key: BUILDER_LOGFILE
    value: "/tmp/.shub-log"
- - key: "BUILDER_KILLHOURS"
+ - key: BUILDER_KILLHOURS
    value: "10"
 optional:
  - "SINGULARITY_COMMIT"
