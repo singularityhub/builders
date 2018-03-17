@@ -4,18 +4,18 @@ layout: null
 
 {
   "links": {
-    "self": "{{ site.domain }}{{ site.baseurl }}{{ page.url }}"
+    "self": "{{ site.domain }}{{ site.baseurl }}{{ page.url }}.json"
    },
 
    "data" {
        "id": "{{ page.url | replace:'.json','.md' | replace: '/cloud/', '' }}",
        "author": "{{ page.author }}",
-     {% if page.tags %}"tags": [{% for tag in page.tags %}"{{ tag }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
-     {% if page.metadata %}"metadata": [{% for var in page.metadata %}
-          { "key": "{{ var.key }}", "value": "{{ var.value }}"}{% if forloop.last %}{% else %},{% endif %}{% endfor %}]{% endif %}        
-     {% if page.optional %}"optional": [{% for var in page.optional %}
+       {% if page.tags %}"tags": [{% for tag in page.tags %}"{{ tag }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
+       {% if page.metadata %}"metadata": [{% for var in page.metadata %}
+          { "key": "{{ var.key }}", "value": "{{ var.value }}"}{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
+       {% if page.optional %}"optional": [{% for var in page.optional %}
           "{{ var }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}      
-     "config": {{ content }}
+       "config": {{ content }}
    },
 
 }
