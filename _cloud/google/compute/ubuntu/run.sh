@@ -30,7 +30,7 @@
 WEBROOT=/var/www/html
 WEBLOG="${WEBROOT}/sregistry.log"
 sudo touch $LOGFILE && sudo chmod 757 $WEBLOG
-echo "Installing Singularity Dependencies" | tee $WEBLOG
+echo "Installing Singularity Dependencies" | tee -a $WEBLOG
 
 sudo apt-get -y install git \
                    build-essential \
@@ -46,10 +46,10 @@ sudo apt-get -y install git \
                    libssl-dev
 
 
-echo "Preparing logging..." | tee $WEBLOG
+echo "Preparing logging..." | tee -a $WEBLOG
 sudo service nginx start
 IPADDRESS=`echo $(hostname -I) | xargs`
-echo "Logs available at http://$IPADDRESS/" | tee $WEBLOG
+echo "Logs available at http://$IPADDRESS/" | tee -a $WEBLOG
 
 # At this point, we should be sitting in the bundle folder.
 if [ -f "index.html" ]; then

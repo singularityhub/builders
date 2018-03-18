@@ -143,6 +143,13 @@ $('.container').on('click', function(e){
   input.focus();
 });
 
+function resetTerminal(content) {
+    var content = content || ''
+    content = '<p class="prompt">Singularity Builder Robot Logger, reporting for duty!</p>' + content;
+    content += '<p class="prompt output new-output"></p>';
+    $('.terminal').html(content);
+}
+
 input.on('keyup', function(e){
   $('.new-output').text(input.val());
   // console.log(inputReady);
@@ -161,8 +168,22 @@ $('.four-oh-four-form').on('submit', function(e){
 });
 
 function updateLog() {
-    console.log("Log would be updated now")
+    console.log("Updating log");
+    var content = ''
+    $.get('sregistry.log', function(result){
+        var lines = result.split('\n')
+        $.each(lines, function(i,line){
+            console.log(line);
+            if (line.length == 0){
+                content = content + '<p>' + line + '</p>'; 
+            } else {
+                content = content + '<p class="prompt">' + line + '</p>'; 
+            }
+        });
+        resetTerminal(content);
+    });
 }
+
 setInterval(updateLog, 10000);
 
 function resetForm(withKittens){
