@@ -27,9 +27,10 @@
 ################################################################################
 
 # We must use known logfile to render html
-LOGFILE="/var/www/html/sregistry.log"
-sudo touch $LOGFILE && sudo chmod 757 $LOGFILE
-echo "Installing Singularity Dependencies" | tee $LOGFILE
+WEBROOT=/var/www/html
+WEBLOG="${WEBROOT}/sregistry.log"
+sudo touch $LOGFILE && sudo chmod 757 $WEBLOG
+echo "Installing Singularity Dependencies" | tee $WEBLOG
 
 sudo apt-get -y install git \
                    build-essential \
@@ -45,9 +46,17 @@ sudo apt-get -y install git \
                    libssl-dev
 
 
-echo "Preparing logging..." | tee $LOGFILE
+echo "Preparing logging..." | tee $WEBLOG
+sudo service nginx start
 IPADDRESS=`echo $(hostname -I) | xargs`
-echo "Logs available at http://$IPADDRESS/" | tee $LOGFILE
+echo "Logs available at http://$IPADDRESS/" | tee $WEBLOG
+
+# At this point, we should be sitting in the bundle folder.
+if [ -f "index.html" ]; then
+    sudo cp index.html $WEBROOT
+else
+
+fi
 
 # Metadata
 
