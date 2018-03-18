@@ -9,6 +9,7 @@ layout: null
 
    "data": {
        "id": "{{ page.url }}",
+       "repo": "{{ site.repo }}",
        "author": "{{ page.author }}",
        {% if page.tags %}"tags": [{% for tag in page.tags %}"{{ tag }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
        {% if page.metadata %}"metadata": { {% for var in page.metadata %}
