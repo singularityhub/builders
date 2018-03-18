@@ -92,7 +92,7 @@ will be rendered via the [builder bundle API](https://singularityhub.github.io/b
 
 ```
 "metadata": { 
-          "GOOGLE_COMPUTE_PROJECT": "debian-project",
+          "GOOGLE_COMPUTE_PROJECT": "debian-cloud",
           "SINGULARITY_REPO": "https://github.com/cclerget/singularity.git",
 ...
            }
@@ -140,7 +140,7 @@ family and type entirely:
 ```
 metadata:
  - key: GOOGLE_COMPUTE_PROJECT
-   value: "debian-project"
+   value: "debian-cloud"
  - key: SREGISTRY_BUILDER_machine_type
    value: "n1-standard-1"
  - key: GOOGLE_COMPUTE_IMAGE_FAMILY
