@@ -16,16 +16,18 @@ metadata:
    value: "debian-8"
  - key: SINGULARITY_BRANCH
    value: "feature-squashbuild-secbuild-2.4.3"
- - key: SINGULARITY_RUNSCRIPT
-   value: "run.sh"
  - key: SINGULARITY_REPO
    value: "https://github.com/cclerget/singularity.git"
+ - key: SREGISTRY_BUILDER_RUNSCRIPT
+   value: "run.sh"
  - key: SREGISTRY_BUILDER_KILLHOURS
    value: "10"
+ - key: SREGISTRY_BUILDER_BRANCH
+ - key: SREGISTRY_BUILDER_TAG
+ - key: SREGISTRY_BUILDER_COMMIT
  - key: SINGULARITY_RECIPE
  - key: SINGULARITY_COMMIT
- - key: BUILDER_TAG
- - key: CONTACT
+ - key: SREGISTRY_CONTACT
 ---
 
         {
