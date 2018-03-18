@@ -4,14 +4,13 @@ layout: null
 
 {
   "links": {
-    "self": "{{ site.domain }}{{ page.url }}.json"
+    "self": "{{ site.domain }}{{ page.path }}"
    },
 
    "data": {
        "id": "{{ page.url }}",
        "repo": "{{ site.repo }}",
-       "file": "{{ page.path }}",
-       "folder": "{{ page.dir }}",
+       "path": "{{ page.path }}",
        "author": "{{ page.author }}",
        {% if page.tags %}"tags": [{% for tag in page.tags %}"{{ tag }}"{% if forloop.last %}{% else %},{% endif %}{% endfor %}],{% endif %}
        {% if page.metadata %}"metadata": { {% for var in page.metadata %}
