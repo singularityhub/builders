@@ -31,13 +31,7 @@ metadata:
 ---
 
         {
-            "disks": [
-                {
-                    "autoDelete": true,
-                    "boot": true,
-                    "initializeParams": {}
-                }
-            ],
+            "disks": [],
             "networkInterfaces": [
                 {
                     "accessConfigs": [
