@@ -26,7 +26,8 @@
 #
 ################################################################################
 
-# We must use known logfile to render html
+# Web Log
+
 WEBROOT=/var/www/html
 WEBLOG="${WEBROOT}/sregistry.log"
 sudo touch $LOGFILE && sudo chmod 757 $WEBLOG
@@ -60,6 +61,7 @@ if [ -f "index.html" ]; then
 else
     echo "Cannot find web index.html file in $PWD";
 fi
+
 
 # Metadata
 
@@ -100,6 +102,7 @@ SREGISTRY_USER_BRANCH: ${SREGISTRY_USER_TAG}
      The tag for the image.
 " | tee -a $WEBLOG
 
+
 # Singularity
 
 BUILDDIR=$PWD
@@ -119,6 +122,7 @@ fi
 echo "Using commit ${SINGULARITY_COMMIT}" | tee -a $WEBLOG
 
 # Install
+
 ./autogen.sh && ./configure --prefix=/usr/local && make && sudo make install && sudo make secbuildimg
 RETVAL=$?
 echo "Install return value $RETVAL" | tee -a $WEBLOG
@@ -127,6 +131,7 @@ echo $(which singularity) | tee -a $WEBLOG
 cd $BUILDDIR
 
 # User Repo Clone
+
 echo
 echo "Build"
 echo
@@ -167,22 +172,25 @@ if [ -f "$SINGULARITY_RECIPE" ]; then
 else
 
     # The recipe was not found!
+
     echo "${SINGULARITY_RECIPE} is not found."  | tee -a $WEBLOG
     ls | tee -a $WEBLOG
 fi
 
-# If the container exists, upload to bucket
 
-# gsutil mb gs://$SREGISTRY_BUILDER_STORAGE_BUCKET
-echo 
-echo "# Storage"
-echo
+# Storage
 
-STORAGE_FOLDER="gs://$SREGISTRY_BUILDER_STORAGE_BUCKET/github.com/$SREGISTRY_CONTAINER_NAME/$SREGISTRY_USER_BRANCH/$SREGISTRY_USER_COMMIT"
-CONTAINER_HASH=($(sha256sum "${CONTAINER}"))
-CONTAINER_UPLOAD="${STORAGE_FOLDER}/${CONTAINER_HASH}:${SREGISTRY_USER_TAG}.simg"
+if [ -f ${CONTAINER} ]; then
 
-echo "Upload with format: 
+    echo 
+    echo "# Storage"
+    echo
+
+    STORAGE_FOLDER="gs://$SREGISTRY_BUILDER_STORAGE_BUCKET/github.com/$SREGISTRY_CONTAINER_NAME/$SREGISTRY_USER_BRANCH/$SREGISTRY_USER_COMMIT"
+    CONTAINER_HASH=($(sha256sum "${CONTAINER}"))
+    CONTAINER_UPLOAD="${STORAGE_FOLDER}/${CONTAINER_HASH}:${SREGISTRY_USER_TAG}.simg"
+
+    echo "Upload with format: 
 [storage-bucket]     : ${SREGISTRY_BUILDER_STORAGE_BUCKET} 
 [github-namespace]   : github.com/[container]/[branch]/[commit]
   [container]        : ${SREGISTRY_CONTAINER_NAME}
@@ -195,12 +203,18 @@ gs://[storage-bucket]/github.com/[github-namespace]/[sha256sum]:[tag].simg
 ${CONTAINER_UPLOAD}
 " | tee -a $WEBLOG
 
-echo "gsutil cp -a public-read $CONTAINER $CONTAINER_UPLOAD"  | tee -a $WEBLOG
-gsutil cp -a public-read $CONTAINER $CONTAINER_UPLOAD | tee -a $WEBLOG
+    echo "gsutil cp -a public-read $CONTAINER $CONTAINER_UPLOAD"  | tee -a $WEBLOG
+    gsutil cp -a public-read $CONTAINER $CONTAINER_UPLOAD | tee -a $WEBLOG
 
-# Finalize Log
+    # Finalize Log
 
-# What metadata?
+    LOG_UPLOAD="${STORAGE_FOLDER}/${CONTAINER_HASH}:${SREGISTRY_USER_TAG}.log"
+    gsutil cp -a public-read "${WEBLOG}" "${LOG_UPLOAD}"
+
+else
+    echo "Container was not built, skipping upload to storage."  | tee -a $WEBLOG    
+fi
 
 # Return to build bundle folder, in case other stuffs to do.
+
 cd $BUILDDIR
