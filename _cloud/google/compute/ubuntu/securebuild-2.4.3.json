@@ -32,6 +32,15 @@ metadata:
 
         {
             "disks": [],
+            "labels": [{
+                "key": "sregistry",
+                "value": "builder"
+             }],
+            "tags": {
+               "items": [
+                    "http-server",
+                    "https-server"
+            ]},
             "networkInterfaces": [
                 {
                     "accessConfigs": [

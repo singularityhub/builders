@@ -26,7 +26,10 @@
 #
 ################################################################################
 
-echo "Installing Singularity Dependencies"
+# We must use known logfile to render html
+LOGFILE="/var/www/html/sregistry.log"
+sudo touch $LOGFILE && sudo chmod 757 $LOGFILE
+echo "Installing Singularity Dependencies" | tee $LOGFILE
 
 sudo apt-get -y install git \
                    build-essential \
@@ -37,9 +40,14 @@ sudo apt-get -y install git \
                    autoconf \
                    debootstrap \
                    yum \
+                   nginx \
                    uuid-dev \
                    libssl-dev
 
+
+echo "Preparing logging..." | tee $LOGFILE
+IPADDRESS=`echo $(hostname -I) | xargs`
+echo "Logs available at http://$IPADDRESS/" | tee $LOGFILE
 
 # Metadata
 
@@ -50,7 +58,6 @@ SINGULARITY_BRANCH=$(curl ${METADATA}/SINGULARITY_BRANCH -H "Metadata-Flavor: Go
 SINGULARITY_RUNSCRIPT=$(curl ${METADATA}/SINGULARITY_RUNSCRIPT -H "Metadata-Flavor: Google")
 SINGULARITY_COMMIT=$(curl ${METADATA}/SINGULARITY_COMMIT -H "Metadata-Flavor: Google")
 BUILDER_STORAGE_BUCKET=$(curl ${METADATA}/BUILDER_STORAGE_BUCKET -H "Metadata-Flavor: Google")
-BUILDER_LOGFILE=$(curl ${METADATA}/BUILDER_LOGFILE -H "Metadata-Flavor: Google")
 SINGULARITY_FOLDER=$(basename $REPO)
 
 
