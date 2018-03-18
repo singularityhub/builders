@@ -35,6 +35,7 @@ echo "Installing Singularity Dependencies" | tee -a $WEBLOG
 sudo apt-get -y install git \
                    build-essential \
                    libtool \
+                   libarchive-dev \
                    squashfs-tools \
                    autotools-dev \
                    automake \
@@ -100,9 +101,11 @@ SREGISTRY_USER_BRANCH: ${SREGISTRY_USER_TAG}
 
 # Singularity
 
-echo "Installing Singularity" | 
-git clone -b $SINGULARITY_BRANCH $SINGULARITY_REPO singularity && cd singularity
-
+BUILDDIR=$PWD
+echo "# Installing Singularity" | tee -a $WEBLOG
+echo
+echo "git clone -b $SINGULARITY_BRANCH $SINGULARITY_REPO" | tee -a $WEBLOG
+cd /tmp && git clone -b $SINGULARITY_BRANCH $SINGULARITY_REPO singularity && cd singularity
 
 # Commit
 
@@ -112,36 +115,64 @@ else
     SINGULARITY_COMMIT=$(git log -n 1 --pretty=format:"%H")
 fi
 
-echo "Using commit ${SINGULARITY_COMMIT}"
+echo "Using commit ${SINGULARITY_COMMIT}" | tee -a $WEBLOG
 
 # Install
-
 ./autogen.sh && ./configure --prefix=/usr/local && make && sudo make install && sudo make secbuildimg
+RETVAL=$?
+echo "Install return value $RETVAL" | tee -a $WEBLOG
+echo $(which singularity) | tee -a $WEBLOG
 
+cd $BUILDDIR
 
-# Write parameters to log
-#TODO
+# User Repo Clone
+echo
+echo "Build"
+echo
+echo "Cloning User Repository $SREGISTRY_USER_REPO" | tee -a $WEBLOG
+echo "git clone -b $SREGISTRY_USER_BRANCH $SREGISTRY_USER_REPO" | tee -a $WEBLOG
+git clone -b $SREGISTRY_USER_BRANCH $SREGISTRY_USER_REPO build-repo && cd build-repo
 
-# Run build
+# Commit
 
-#TODO: image should be named something specific... hash? version? 
-# If we name hash, can rename file at end.
-
-echo "Start Time: $(date)." > ${SREGISTRY_LOGFILE} 2>&1
-sudo singularity build container.simg "${SINGULARITY_RECIPE}" >> ${BUILDER_LOGFILE} 2>&1
-ret=$?
-
-echo "Return value of ${ret}." >> "${BUILDER_LOGFILE}" 2>&1
-
-if [ $ret -eq 137 ]
-then
-    echo "Killed: $(date)." >> "${BUILDER_LOGFILE}" 2>&1
+if [ -x "${SREGISTRY_USER_COMMIT}" ]; then
+    git checkout $SREGISTRY_USER_COMMIT .
 else
-    echo "End Time: $(date)." >> "${BUILDER_LOGFILE}" 2>&1
+    SREGISTRY_USER_COMMIT=$(git log -n 1 --pretty=format:"%H")
 fi
+
+echo "Using commit ${SREGISTRY_USER_COMMIT}" | tee -a $WEBLOG
+
+# Build
+
+if [ -f "$SINGULARITY_RECIPE" ]; then
+
+    # Record time and perform build
+    echo "Found recipe: ${SINGULARITY_RECIPE}" | tee -a $WEBLOG
+    echo "Start Time: $(date)." | tee -a $WEBLOG
+    sudo singularity build $SREGISTRY_USER_COMMIT.simg "${SINGULARITY_RECIPE}" | tee -a $WEBLOG
+
+    # Assess return value
+    ret=$?
+    echo "Return value of ${ret}." | tee -a $WEBLOG
+    if [ $ret -eq 137 ]; then
+        echo "Killed: $(date)." | tee -a $WEBLOG
+    else
+        echo "End Time: $(date)." | tee -a $WEBLOG
+    fi
+
+else
+
+    # The recipe was not found!
+    echo "${SINGULARITY_RECIPE} is not found."  | tee -a $WEBLOG
+    ls | tee -a $WEBLOG
+fi
+
+# Check that image exists - where to send it?
 
 # Finalize Log
 
-#TODO
+# What metadata?
 
-#image hash, size, etc.
+# Return to build bundle folder, in case other stuffs to do.
+cd $BUILDDIR
