@@ -51,11 +51,13 @@ sudo service nginx start
 IPADDRESS=`echo $(hostname -I) | xargs`
 echo "Logs available at http://$IPADDRESS/" | tee -a $WEBLOG
 
-# At this point, we should be sitting in the bundle folder.
+
+# Robot Web Reporter
+
 if [ -f "index.html" ]; then
     sudo cp index.html $WEBROOT
 else
-
+    echo "Cannot find web index.html file in $PWD";
 fi
 
 # Metadata
@@ -65,16 +67,41 @@ HEAD="Metadata-Flavor: Google"
 
 SINGULARITY_REPO=$(curl ${METADATA}/SINGULARITY_REPO -H "${HEAD}")
 SINGULARITY_BRANCH=$(curl ${METADATA}/SINGULARITY_BRANCH -H "${HEAD}")
-SINGULARITY_RUNSCRIPT=$(curl ${METADATA}/SINGULARITY_RUNSCRIPT -H "${HEAD}")
+SINGULARITY_RECIPE=$(curl ${METADATA}/SINGULARITY_RECIPE -H "${HEAD}")
 SINGULARITY_COMMIT=$(curl ${METADATA}/SINGULARITY_COMMIT -H "${HEAD}")
-BUILDER_STORAGE_BUCKET=$(curl ${METADATA}/SREGISTRY_BUILDER_STORAGE_BUCKET -H "${HEAD}")
-SINGULARITY_FOLDER=$(basename $REPO)
+SREGISTRY_USER_REPO=$(curl ${METADATA}/SREGISTRY_USER_REPO -H "${HEAD}")
+SREGISTRY_USER_BRANCH=$(curl ${METADATA}/SREGISTRY_USER_BRANCH -H "${HEAD}")
+SREGISTRY_USER_COMMIT=$(curl ${METADATA}/SREGISTRY_USER_COMMIT -H "${HEAD}")
+SREGISTRY_USER_TAG=$(curl ${METADATA}/SREGISTRY_USER_TAG -H "${HEAD}")
 
+SREGISTRY_BUILDER_STORAGE_BUCKET=$(curl ${METADATA}/SREGISTRY_BUILDER_STORAGE_BUCKET -H "${HEAD}")
+
+echo "
+# SINGULARITY
+
+SINGULARITY_REPO: ${SINGULARITY_REPO}
+    The Singularity repository being cloned by the builder. 
+SINGULARITY_BRANCH: ${SINGULARITY_BRANCH}
+    The branch of the repository being used.
+SINGULARITY_COMMIT: ${SINGULARITY_COMMIT}
+    If defined, a particular commit to checkout.
+
+# SETTINGS
+
+SREGISTRY_USER_REPO: ${SREGISTRY_USER_REPO}
+    Your repository we are building from!
+SINGULARITY_RECIPE: ${SINGULARITY_RECIPE}
+    The recipe file in queue for build!
+SREGISTRY_USER_BRANCH: ${SREGISTRY_USER_BRANCH}
+    The branch we are cloning to do your build.
+SREGISTRY_USER_BRANCH: ${SREGISTRY_USER_TAG}
+     The tag for the image.
+" | tee -a $WEBLOG
 
 # Singularity
 
-echo "Installing Singularity"
-git clone -b $SINGULARITY_BRANCH $SINGULARITY_REPO && cd "${SINGULARITY_FOLDER}"
+echo "Installing Singularity" | 
+git clone -b $SINGULARITY_BRANCH $SINGULARITY_REPO singularity && cd singularity
 
 
 # Commit

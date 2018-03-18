@@ -171,15 +171,8 @@ function updateLog() {
     console.log("Updating log");
     var content = ''
     $.get('sregistry.log', function(result){
-        var lines = result.split('\n')
-        $.each(lines, function(i,line){
-            console.log(line);
-            if (line.length == 0){
-                content = content + '<p>' + line + '</p>'; 
-            } else {
-                content = content + '<p class="prompt">' + line + '</p>'; 
-            }
-        });
+        var lines = result.replace('\n','<br>')
+        content = content + '<p class="prompt">' + lines + '</p>'; 
         resetTerminal(content);
     });
 }
