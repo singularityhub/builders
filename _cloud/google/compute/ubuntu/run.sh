@@ -74,6 +74,7 @@ SREGISTRY_USER_REPO=$(curl ${METADATA}/SREGISTRY_USER_REPO -H "${HEAD}")
 SREGISTRY_USER_BRANCH=$(curl ${METADATA}/SREGISTRY_USER_BRANCH -H "${HEAD}")
 SREGISTRY_USER_COMMIT=$(curl ${METADATA}/SREGISTRY_USER_COMMIT -H "${HEAD}")
 SREGISTRY_USER_TAG=$(curl ${METADATA}/SREGISTRY_USER_TAG -H "${HEAD}")
+SREGISTRY_CONTAINER_NAME=$(curl ${METADATA}/SREGISTRY_CONTAINER_NAME -H "${HEAD}")
 
 SREGISTRY_BUILDER_STORAGE_BUCKET=$(curl ${METADATA}/SREGISTRY_BUILDER_STORAGE_BUCKET -H "${HEAD}")
 
@@ -145,12 +146,14 @@ echo "Using commit ${SREGISTRY_USER_COMMIT}" | tee -a $WEBLOG
 
 # Build
 
+CONTAINER=$SREGISTRY_USER_COMMIT.simg
+
 if [ -f "$SINGULARITY_RECIPE" ]; then
 
     # Record time and perform build
     echo "Found recipe: ${SINGULARITY_RECIPE}" | tee -a $WEBLOG
     echo "Start Time: $(date)." | tee -a $WEBLOG
-    sudo singularity build $SREGISTRY_USER_COMMIT.simg "${SINGULARITY_RECIPE}" | tee -a $WEBLOG
+    sudo singularity build $CONTAINER "${SINGULARITY_RECIPE}" | tee -a $WEBLOG
 
     # Assess return value
     ret=$?
@@ -168,7 +171,32 @@ else
     ls | tee -a $WEBLOG
 fi
 
-# Check that image exists - where to send it?
+# If the container exists, upload to bucket
+
+# gsutil mb gs://$SREGISTRY_BUILDER_STORAGE_BUCKET
+echo 
+echo "# Storage"
+echo
+
+STORAGE_FOLDER="gs://$SREGISTRY_BUILDER_STORAGE_BUCKET/github.com/$SREGISTRY_CONTAINER_NAME/$SREGISTRY_USER_BRANCH/$SREGISTRY_USER_COMMIT"
+CONTAINER_HASH=($(sha256sum "${CONTAINER}"))
+CONTAINER_UPLOAD="${STORAGE_FOLDER}/${CONTAINER_HASH}:${SREGISTRY_USER_TAG}.simg"
+
+echo "Upload with format: 
+[storage-bucket]     : ${SREGISTRY_BUILDER_STORAGE_BUCKET} 
+[github-namespace]   : github.com/[container]/[branch]/[commit]
+  [container]        : ${SREGISTRY_CONTAINER_NAME}
+  [commit]           : ${SREGISTRY_USER_COMMIT}
+  [branch]           : ${SREGISTRY_USER_BRANCH}
+[sha256sum]          : ${CONTAINER_HASH}
+[tag]                : ${SREGISTRY_USER_TAG}
+gs://[storage-bucket]/github.com/[github-namespace]/[sha256sum]:[tag].simg
+
+${CONTAINER_UPLOAD}
+" | tee -a $WEBLOG
+
+echo "gsutil cp -a public-read $CONTAINER $CONTAINER_UPLOAD"  | tee -a $WEBLOG
+gsutil cp -a public-read $CONTAINER $CONTAINER_UPLOAD | tee -a $WEBLOG
 
 # Finalize Log
 
