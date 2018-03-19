@@ -10,6 +10,7 @@ tags:
 metadata:
  - key: GOOGLE_COMPUTE_PROJECT
    value: "debian-cloud"
+ - key: SREGISTRY_BUILDER_disk_size
  - key: SREGISTRY_BUILDER_machine_type
    value: "n1-standard-1"
  - key: GOOGLE_COMPUTE_IMAGE_FAMILY
