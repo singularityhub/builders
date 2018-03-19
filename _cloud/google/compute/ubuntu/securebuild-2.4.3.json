@@ -23,7 +23,7 @@ metadata:
  - key: SREGISTRY_BUILDER_KILLHOURS
    value: "10"
  - key: SREGISTRY_GOOGLE_STORAGE_PRIVATE
- - value: false
+   value: false
  - key: SREGISTRY_BUILDER_BRANCH
  - key: SREGISTRY_BUILDER_TAG
  - key: SREGISTRY_BUILDER_COMMIT
