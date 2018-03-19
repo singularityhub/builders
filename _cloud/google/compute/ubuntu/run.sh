@@ -237,7 +237,7 @@ ${CONTAINER_UPLOAD}
     # Finalize Log
 
     LOG_UPLOAD="${STORAGE_FOLDER}/${CONTAINER_HASH}:${SREGISTRY_USER_TAG}.log"
-    gsutil cp -a public-read "${WEBLOG}" "${LOG_UPLOAD}"
+    gsutil cp $PRIVATE "${WEBLOG}" "${LOG_UPLOAD}"
 
 else
     echo "Container was not built, skipping upload to storage."  | tee -a $WEBLOG    
