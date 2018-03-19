@@ -10,7 +10,6 @@ tags:
 metadata:
  - key: GOOGLE_COMPUTE_PROJECT
    value: "debian-cloud"
- - key: SREGISTRY_BUILDER_disk_size
  - key: SREGISTRY_BUILDER_machine_type
    value: "n1-standard-1"
  - key: GOOGLE_COMPUTE_IMAGE_FAMILY
@@ -25,6 +24,7 @@ metadata:
    value: "10"
  - key: SREGISTRY_GOOGLE_STORAGE_PRIVATE
    value: false
+ - key: SREGISTRY_BUILDER_disk_size
  - key: SREGISTRY_BUILDER_BRANCH
  - key: SREGISTRY_BUILDER_TAG
  - key: SREGISTRY_BUILDER_COMMIT
