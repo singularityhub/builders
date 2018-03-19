@@ -232,15 +232,20 @@ ${CONTAINER_UPLOAD}
            -h "x-goog-meta-uri:${SREGISTRY_CONTAINER_NAME}:${SREGISTRY_USER_TAG}@${SREGISTRY_USER_COMMIT}" \
            cp $PRIVATE $CONTAINER $CONTAINER_UPLOAD | tee -a $WEBLOG
 
-    # Finalize Log
-
-    LOG_UPLOAD="${STORAGE_FOLDER}/${CONTAINER_HASH}:${SREGISTRY_USER_TAG}.log"
-    gsutil cp $PRIVATE "${WEBLOG}" "${LOG_UPLOAD}"
-
 else
     echo "Container was not built, skipping upload to storage."  | tee -a $WEBLOG    
 fi
 
 # Return to build bundle folder, in case other stuffs to do.
+
+# Regardless of success, finalize Log and upload
+LOG_UPLOAD="${STORAGE_FOLDER}/${CONTAINER_HASH}:${SREGISTRY_USER_TAG}.log"
+
+if [ -f "$WEBLOG" ]; then
+    echo "Uploading ${WEBLOG} to ${LOG_UPLOAD}"
+    gsutil cp $PRIVATE "${WEBLOG}" "${LOG_UPLOAD}"
+else
+    echo "Skipping upload of ${WEBLOG}, does not exist"
+fi
 
 cd $BUILDDIR
