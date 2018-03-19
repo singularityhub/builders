@@ -203,8 +203,14 @@ gs://[storage-bucket]/github.com/[github-namespace]/[sha256sum]:[tag].simg
 ${CONTAINER_UPLOAD}
 " | tee -a $WEBLOG
 
-    echo "gsutil cp -a public-read $CONTAINER $CONTAINER_UPLOAD"  | tee -a $WEBLOG
-    gsutil cp -a public-read $CONTAINER $CONTAINER_UPLOAD | tee -a $WEBLOG
+    echo "gsutil  cp -a public-read $CONTAINER $CONTAINER_UPLOAD"  | tee -a $WEBLOG
+    gsutil -h "x-goog-meta-type:container" \
+           -h "x-goog-meta-client:sregistry" \
+           -h "x-goog-meta-tag:${SREGISTRY_USER_TAG}" \
+           -h "x-goog-meta-commit:${SREGISTRY_USER_COMMIT}" \
+           -h "x-goog-meta-hash:${CONTAINER_HASH}" \
+           -h "x-goog-meta-uri:${SREGISTRY_CONTAINER_NAME}:${SREGISTRY_USER_TAG}@${SREGISTRY_USER_COMMIT}" \
+           cp -a public-read $CONTAINER $CONTAINER_UPLOAD | tee -a $WEBLOG
 
     # Finalize Log
 
