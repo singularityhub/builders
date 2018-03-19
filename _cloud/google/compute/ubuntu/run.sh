@@ -29,7 +29,6 @@
 # Web Log
 
 WEBROOT=/var/www/html
-sudo mkdir -p /var/www/html
 WEBLOG="${WEBROOT}/sregistry.log"
 sudo touch $WEBLOG && sudo chmod 757 $WEBLOG
 echo "Installing Singularity Dependencies" | tee -a $WEBLOG
@@ -44,13 +43,11 @@ sudo apt-get -y install git \
                    autoconf \
                    debootstrap \
                    yum \
-                   nginx \
                    uuid-dev \
                    libssl-dev
 
 
 echo "Preparing logging..." | tee -a $WEBLOG
-sudo service nginx start
 IPADDRESS=`echo $(hostname -I) | xargs`
 echo "Logs available at http://$IPADDRESS/" | tee -a $WEBLOG
 
@@ -81,6 +78,15 @@ SREGISTRY_CONTAINER_NAME=$(curl ${METADATA}/SREGISTRY_CONTAINER_NAME -H "${HEAD}
 
 SREGISTRY_BUILDER_STORAGE_BUCKET=$(curl ${METADATA}/SREGISTRY_BUILDER_STORAGE_BUCKET -H "${HEAD}")
 SREGISTRY_GOOGLE_STORAGE_PRIVATE=$(curl ${METADATA}/SREGISTRY_GOOGLE_STORAGE_PRIVATE -H "${HEAD}")
+
+# User Repo Tag and branch
+
+if [ ! -n "${SREGISTRY_USER_TAG:-}" ]; then
+    SREGISTRY_USER_TAG=latest
+fi
+if [ ! -n "${SREGISTRY_USER_BRANCH:-}" ]; then
+    SREGISTRY_USER_BRANCH=master
+fi
 
 echo "
 # SINGULARITY
@@ -136,15 +142,6 @@ echo $(which singularity) | tee -a $WEBLOG
 cd $BUILDDIR
 
 # User Repo
-
-# Tag and branch
-
-if [ ! -n "${SREGISTRY_USER_TAG:-}" ]; then
-    SREGISTRY_USER_TAG=latest
-fi
-if [ ! -n "${SREGISTRY_USER_BRANCH:-}" ]; then
-    SREGISTRY_USER_BRANCH=master
-fi
 
 # Clone
 
