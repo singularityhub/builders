@@ -29,8 +29,9 @@
 # Web Log
 
 WEBROOT=/var/www/html
+sudo mkdir -p /var/www/html
 WEBLOG="${WEBROOT}/sregistry.log"
-sudo touch $LOGFILE && sudo chmod 757 $WEBLOG
+sudo touch $WEBLOG && sudo chmod 757 $WEBLOG
 echo "Installing Singularity Dependencies" | tee -a $WEBLOG
 
 sudo apt-get -y install git \
