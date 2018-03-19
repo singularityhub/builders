@@ -79,6 +79,7 @@ SREGISTRY_USER_TAG=$(curl ${METADATA}/SREGISTRY_USER_TAG -H "${HEAD}")
 SREGISTRY_CONTAINER_NAME=$(curl ${METADATA}/SREGISTRY_CONTAINER_NAME -H "${HEAD}")
 
 SREGISTRY_BUILDER_STORAGE_BUCKET=$(curl ${METADATA}/SREGISTRY_BUILDER_STORAGE_BUCKET -H "${HEAD}")
+SREGISTRY_GOOGLE_STORAGE_PRIVATE=$(curl ${METADATA}/SREGISTRY_GOOGLE_STORAGE_PRIVATE -H "${HEAD}")
 
 echo "
 # SINGULARITY
@@ -98,8 +99,10 @@ SINGULARITY_RECIPE: ${SINGULARITY_RECIPE}
     The recipe file in queue for build!
 SREGISTRY_USER_BRANCH: ${SREGISTRY_USER_BRANCH}
     The branch we are cloning to do your build.
-SREGISTRY_USER_BRANCH: ${SREGISTRY_USER_TAG}
+SREGISTRY_USER_TAG: ${SREGISTRY_USER_TAG}
      The tag for the image.
+SREGISTRY_GOOGLE_STORAGE_PRIVATE: ${SREGISTRY_GOOGLE_STORAGE_PRIVATE}
+    Building a private image?
 " | tee -a $WEBLOG
 
 
@@ -113,13 +116,14 @@ cd /tmp && git clone -b $SINGULARITY_BRANCH $SINGULARITY_REPO singularity && cd 
 
 # Commit
 
-if [ -x "${SINGULARITY_COMMIT}" ]; then
+if [ -n "${SINGULARITY_COMMIT}" ]; then
     git checkout $SINGULARITY_COMMIT .
 else
     SINGULARITY_COMMIT=$(git log -n 1 --pretty=format:"%H")
 fi
 
 echo "Using commit ${SINGULARITY_COMMIT}" | tee -a $WEBLOG
+
 
 # Install
 
@@ -130,7 +134,18 @@ echo $(which singularity) | tee -a $WEBLOG
 
 cd $BUILDDIR
 
-# User Repo Clone
+# User Repo
+
+# Tag and branch
+
+if [ ! -n "${SREGISTRY_USER_TAG:-}" ]; then
+    SREGISTRY_USER_TAG=latest
+fi
+if [ ! -n "${SREGISTRY_USER_BRANCH:-}" ]; then
+    SREGISTRY_USER_BRANCH=master
+fi
+
+# Clone
 
 echo
 echo "Build"
@@ -141,7 +156,7 @@ git clone -b $SREGISTRY_USER_BRANCH $SREGISTRY_USER_REPO build-repo && cd build-
 
 # Commit
 
-if [ -x "${SREGISTRY_USER_COMMIT}" ]; then
+if [ -n "${SREGISTRY_USER_COMMIT:-}" ]; then
     git checkout $SREGISTRY_USER_COMMIT .
 else
     SREGISTRY_USER_COMMIT=$(git log -n 1 --pretty=format:"%H")
