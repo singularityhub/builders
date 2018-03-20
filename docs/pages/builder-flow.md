@@ -164,7 +164,13 @@ change defaults, or even add your own to do different things! For example:
  - You can decide that installing Singularity every time is slow, and preconfigure an image with dependencies, remove the variables for the `SINGULARITY_*` namespace, and just start with an instance ready to go! This is what Singularity Hub does, so we don't need to install Singularity and prepare an instance each time.
  - You could write a different entrypoint that also does custom logging or notification to my platform of choice, and ask the user to add a `MYNAMESPACE_*`
 
-### 5. Understand what you are responsible for
+### 5. Understand what is provided
+Currently, the `sregistry` software sets you up with your instance of choice, and will install the web server nginx and git to clone your repos, and then execute the build and clean up. This means that:
+
+ - You can interact with the web server in `/var/www/html` to your liking. For example, the default Google Compute will generate an [interactive log](https://vsoch.github.io/sherlock_vep/) there.
+ - The server log is written to `/tmp/.shub-log`. This is where you should write things you don't want appearing for the user, but perhaps that would be available if someone needed to shell in.
+
+### 6. Understand what you are responsible for
 Looking at the existing builders is a good start, generally. To be more specific, your build entry point should handle the following:
 
  - The builder bundle will be obtained via the [scripts](https://github.com/singularityhub/sregistry-cli/tree/master/sregistry/templates) served with the `sregistry client` and the `SREGISTRY_BUILDER_*` namespace. You should include these in your header.
