@@ -245,7 +245,7 @@ if [ -f "$WEBLOG" ]; then
     echo "Uploading ${WEBLOG} to ${LOG_UPLOAD}"
     gsutil cp $PRIVATE "${WEBLOG}" "${LOG_UPLOAD}"
 else
-    echo "Skipping upload of ${WEBLOG}, does not exist"
+    echo "Skipping upload of ${WEBLOG}, does not exist."
 fi
 
 cd $BUILDDIR

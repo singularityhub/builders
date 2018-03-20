@@ -1,0 +1,9 @@
+  - title: "Home"
+    url: "/builders/"
+    slug: builders
+  - title: "FAQ"
+    url: "/builders/faq"
+    slug: faq
+  - title: "Contribute a Builder"
+    url: "/builders/contribute-builder"
+    slug: contribute-builder
