@@ -22,7 +22,6 @@ metadata:
    value: "https://github.com/cclerget/singularity.git"
  - key: SREGISTRY_GOOGLE_STORAGE_PRIVATE
    value: false
- - key: SREGISTRY_BUILDER_disk_size
 ---
 
         {
