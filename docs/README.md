@@ -14,7 +14,7 @@ permalink: /
 
 
 # The Builders
-Welcome to the Builders documentation! 
+Welcome to the Builders documentation! <a href="https://vsoch.github.io/builders/configs.json" target='_blank'>[builder-manifest]</a>.
 
 ## What are the Builders?
 Hi friends! Welcome to the builders documentation! The Builder robots are served 
