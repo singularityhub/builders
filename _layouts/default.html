@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  
+  {% include head.html %}
+  {% include navigation.html %}
+
+  <body>
+    {% include page-header.html %}
+
+    <br><br><br>
+    <section class="main-content">
+      <hr><br>
+      
+      {% if page.toc %}
+      {% include toc.html %}
+      {% endif %}
+      {{ content }}
+      {% include editable.html %}
+      {% include page-footer.html %}
+
+    </section>
+
+  </body>
+</html>

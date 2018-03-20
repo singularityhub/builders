@@ -6,6 +6,10 @@ description: "Static API to serve Singularity Builder Configs"
 baseurl: "/builders" #important: start with /
 domain: "https://singularityhub.github.io/builders"
 
+# About/contact
+author:
+  name:       Vanessa Sochat
+  url:        https://singularityhub.github.io/sregistry-cli
 
 # Build settings
 markdown: kramdown

@@ -1,7 +1,16 @@
 ---
-permalink: docs
-title: Docs
+layout: default
+title: Singularity Google Compute Builder
+pdf: true
+permalink: /builder-flow
+toc: true
 ---
+
+# Builder Flow
+
+The Google Compute Builder is the first builder offered by the `sregistry` client! For builder usage, see the 
+[sregistry documentation](https://singularityhub.github.io/sregistry-cli/client-google-compute). These notes are relevant to development, meaning customizing or appending the files
+in this repository.
 
 This is a brief set of documentation to help the developer contribute a new
 or update Singularity Builder. 
@@ -167,3 +176,9 @@ Looking at the existing builders is a good start, generally. To be more specific
  - You are responsible for writing good notes and documentation for your configurations! If you need help, please [reach out](https://www.github.com/singularityhub/builders/issues)
 
 If you need a list of environment variable defaults, take a look at the build.py script for your builder of choice.
+
+
+<div>
+    <a href="/builders"><button class="previous-button btn btn-primary"><i class="fa fa-chevron-left"></i> </button></a>
+    <a href="/builders"><button class="next-button btn btn-primary"><i class="fa fa-chevron-right"></i> </button></a>
+</div><br>
