@@ -46,6 +46,8 @@ $ sregistry build templates cloud/google/compute/ubuntu/securebuild-2.4.3.json
         },
         "tags": [
             "ubuntu",
+            "google-compute",
+            "google-storage",
             "singularity"
         ]
     },
@@ -65,22 +67,19 @@ of this repository, pointing directly to the json file! This means that the vari
 in the file, along with the configuration data structure (the content of the file) are parsed on Github pages 
 into what you see when you issue that command. To see the complete output of the above,
 go to the [selfLink](https://singularityhub.github.io/builders/cloud/google/compute/ubuntu/securebuild-2.4.3.json) 
-and then compare that with the [file it renders from](https://github.com/singularityhub/builders/blob/master/_cloud/google/compute/ubuntu/securebuild-2.4.3.json). 
+and then compare that with the [file it renders from](https://github.com/singularityhub/builders/blob/master/_cloud/google/compute/ubuntu/securebuild-2.4.3.json).  Also notice that this example builder bundle is relevant for Google Compute engine, meaning that the `google-compute` builder is the one that knows how to use it. We represent this information in tags.
 
 ### 3. Understand the variables
-The content of the file is important! The json data structure at the bottom, the content
-of the file, has the [Google Compute configuration start](https://cloud.google.com/compute/docs/tutorials/python-guide#adding-an-instance) for all variables that we probably aren't going to change. Keep in mind that the user
-**can** change any and everything when the template is created, but these aren't exposed nicely in the documentation because they are unlikely to change. The header chunk at the top (the part in yaml) defines the variables that need to be defined,
-and likely will change, under the `metadata` field. How does it work? The user will generate a json configuration file
+The content of the file is important! The json data structure at the bottom in our examples above has the [Google Compute configuration start](https://cloud.google.com/compute/docs/tutorials/python-guide#adding-an-instance) for a good set of variables that are not likely to change. Keep in mind that the user
+**can** change any and everything when the template is created. The header chunk at the top (the part in yaml) defines the variables that are either different from the defaults set by sregistry for a general Google Cloud builder (for example, by default we would clone a master branch, but here we want a different one with a secure build), or specific to the builder bundle and wouldn't be defined by sregistry or have a default (for example, we might have some custom logging and want the user to add an email for it). These variables that we want to render into the `metadata` field of our config.json, meaning the user is shown them up front, and under the `metadata` front matter in the file you are looking it.
+
+How does this yaml front matter turn into a configuration file? The user will generate the file
 using the builder bundle API (the call we showed above), customize the variables, and then they will be send to the
 builder as metadata when creating the instance. The header also defines a main 
 entry point (`runscript`) meaning that once the builder instance is created, the repository cloned, and we are sitting in
-the directory with our builder bundle, this is the script that is called. This is important for the developer to know
-because...
+the directory with our builder bundle, this is the script that is called.
 
->> If you develop a new builder that deviates or requires special variables, you **must** write a clear README.md to give this instruction to the user's of your template!
-
-This means that you need to generate a *.json file akin to this in order to add a builder bundle. We will talk about this next. For complete (userland usage), see the [sregistry docs](https://singularityhub.github.io/sregistry-cli/client-google-compute). To be explicitly clear, this variable in the json file in the Github repository:
+Generally, for all custom variables, along with listing them in your front end yaml matter you should write a clear README.md to give another head's up to the user. Here we will show you how the front end matter eventually gets to the builder instance. Here is a variable in the json front end matter in the Github repository:
 
 ```
 metadata:
@@ -88,7 +87,7 @@ metadata:
    value: "https://github.com/cclerget/singularity.git"
 ```
 
-will be rendered via the [builder bundle API](https://singularityhub.github.io/builders/cloud/google/compute/ubuntu/securebuild-2.4.3.json) in the "metadata" section:
+This will be rendered via the [builder bundle API](https://singularityhub.github.io/builders/cloud/google/compute/ubuntu/securebuild-2.4.3.json) in the "metadata" section:
 
 ```
 "metadata": { 
@@ -130,7 +129,8 @@ have no defaults).
 For the above, the user **could** define the `SINGULARITY_COMMIT` in the config.json file
 if he wanted a particular commit of the software, but it's not required.
 
-And there we have it! 
+And there we have it! Any variables that you add as metadata will be sent to your instance, so for 
+example, you would retrieve them as above in your run.sh (the main entrypoint for your builder) script.
 
 ### 4. Understand how to customize
 This means that you will be good to start off with one of the already 
@@ -147,7 +147,7 @@ metadata:
    value: "debian-8"
 ```
 
-Yes, the variables that start with `GOOGLE_COMPUTE_*` are for that namespace! You can get
+The variables that start with `GOOGLE_COMPUTE_*` are for that namespace! You can get
 a different base image by changing them. You will likely want to keep the core variables 
 shown above to get the builder bundle and Singularity version, but you are totally free to
 change defaults, or even add your own to do different things! For example:
@@ -165,3 +165,5 @@ Looking at the existing builders is a good start, generally. To be more specific
  - You are responsible for dealing with kill times and timeouts, or generally deciding how to deal with things when they go wrong! For these first templates, I am using a runtime limit of 10 hours, at which point the job is killed.
  - You are responsible for cleaning up (or not) the instance. For these first templates, I have a function that will allow the instance to... destroy itself. Yes, it's a little dark.
  - You are responsible for writing good notes and documentation for your configurations! If you need help, please [reach out](https://www.github.com/singularityhub/builders/issues)
+
+If you need a list of environment variable defaults, take a look at the build.py script for your builder of choice.
