@@ -4,7 +4,7 @@ layout: null
 
 {
   "links": {
-    "self": "{{ site.domain }}{{ page.path }}"
+    "self": "{{ site.domain }}{{ page.url }}"
    },
 
    "data": {
